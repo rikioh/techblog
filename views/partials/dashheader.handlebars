@@ -1,0 +1,73 @@
+<main class="main dashboard">
+    <div class="container">
+
+        {{!-- date text --}}
+        {{!-- Date is currently hard coded. --}}
+        <div class="col-lg-12">
+            <div class="dashboard-title-layout" id="date-chooser">
+                <h1 class="dashboard-title"><i class="fas fa-calendar-day" style="padding-right: 20px;"></i>Thu 4/8/2021
+                </h1>
+            </div>
+        </div>
+
+        {{!-- progress details --}}
+        <div class="row">
+
+            {{!-- calories info --}}
+            <div class="col-lg-3" style="padding-top: 40px;">
+                <h3 class="foreground-white regular elevation justify-center bottom-md">Calories</h3>
+                <h2 class="foreground-white emphasis elevation justify-center bottom-lg" id="daily-alorie-count">
+                    {{calsLeft}}
+                    left</h2>
+                <div class="progress">
+                    <div id="progress-bar-calories" class="progress-bar progress-bar-striped progress-bar-animated"
+                        role="progressbar" aria-valuenow="{{calsPerc}}" aria-valuemin="0" aria-valuemax="100"
+                        style="width: {{calsPerc}}%">
+                    </div>
+                </div>
+            </div>
+
+            {{!-- Proteins info --}}
+            <div class="col-lg-3" style="padding-top: 40px;">
+                <h3 class="foreground-white regular elevation justify-center bottom-md">Proteins</h3>
+                <h2 class="foreground-white emphasis elevation justify-center bottom-lg" id="daily-protein-count">
+                    {{prosLeft}}g
+                    left</h2>
+                <div class="progress">
+                    <div id="progress-bar-proteins" class="progress-bar progress-bar-striped progress-bar-animated"
+                        role="progressbar" aria-valuenow="{{prosPerc}}" aria-valuemin="0" aria-valuemax="100"
+                        style="width: {{prosPerc}}%">
+                    </div>
+                </div>
+            </div>
+
+            {{!-- Carbs info --}}
+            <div class="col-lg-3" style="padding-top: 40px;">
+                <h3 class="foreground-white regular elevation justify-center bottom-md">Carbs</h3>
+                <h2 class="foreground-white emphasis elevation justify-center bottom-md" id="daily-carb-count">
+                    {{carbsLeft}}g left
+                </h2>
+                <div class="progress">
+                    <div id="progress-bar-carbs" class="progress-bar progress-bar-striped progress-bar-animated"
+                        role="progressbar" aria-valuenow="{{carbsPerc}}" aria-valuemin="0" aria-valuemax="100"
+                        style="width: {{carbsPerc}}%">
+                    </div>
+                </div>
+            </div>
+
+            {{!-- Fats info --}}
+            <div class="col-lg-3" style="padding-top: 40px;">
+                <h3 class="foreground-white elevation justify-center bottom-md">Fats</h3>
+                <h2 class="foreground-white emphasis elevation justify-center bottom-lg" id="daily-fat-count">
+                    {{fatsLeft}}g left
+                </h2>
+                <div class="progress">
+                    <div id="progress-bar-fats" class="progress-bar progress-bar-striped progress-bar-animated"
+                        role="progressbar" aria-valuenow="{{fatsPerc}}" aria-valuemin="0" aria-valuemax="100"
+                        style="width: {{fatsPerc}}%">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
