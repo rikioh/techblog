@@ -1,67 +1,8 @@
-// Imports.
-const {Model, DataTypes} = require('sequelize');
-const bcrypt = require('bcrypt');
-const sequelize = require('../config/connection');
+// import models
+const User = require('./User');
 
-//Initialize the model.
-class User extends Model{
-    //Custom function to check password correctness.
-    checkPassword(loginPw) {
-        return bcrypt.compareSync(loginPw, this.password);
-      }
+
+//Export them.
+module.exports = {
+  User
 }
-
-//Set the models columns
-User.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true,
-            autoIncrement: true,
-        },
-
-        username: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-
-        email: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            unique: true,
-            validate: {
-                isEmail: true,
-            },
-        },
-
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-
-                len: [8, 25],
-            }
-        },
-
-    },
-
-    {//Custom hooks to encrypt the password.
-        hooks: {
-            beforeCreate: async (newUserData) => {
-              newUserData.password = await bcrypt.hash(newUserData.password, 10);
-              return newUserData;
-            },
-          },
-
-        sequelize,
-        timestamps: false,
-        freezeTableName: true,
-        underscored: true,
-        modelName: 'user',
-        
-      }
-    );
-    
-    //Export the model.
-    module.exports = User;
