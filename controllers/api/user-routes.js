@@ -1,81 +1,71 @@
-const router = require('express').Router();
-const { User } = require('../../models');
+const router = require('express').Router()
+const { User } = require('../../models')
 
-// GET all users
-router.get('/', (req, res) => {
-    User.findAll({
-        attributes: { exclude: ['password'] }
-    })
-        .then(userData => res.json(userData))
-        .catch(err => {
-            console.log(err);
-            res.status(500).json(err);
-        });
-});
 
-// GET a single user by ID
-router.get('/:id', (req, res) => {
-    User.findOne({
-        attributes: {
-            exclude: ['password']
-        },
-        where: {
-            id: req.params.id
+// POST new user
+router.post('/', async (req, res) => {
+    try {
+        const userData = await User.create({
+            email: req.body.email,
+            password: req.body.password,
+            name: req.body.name
+        })
+
+        req.session.save(() => {
+            req.session.user_id = userData.user_id
+            req.session.logged_in = true
+            res.status(200).json(userData)
+        })
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error)
+    }
+})
+
+// POST user login
+router.post('/login', async (req, res) => {
+
+    try {
+        // Find matching user
+        const userData = await User.findOne({where: {email: req.body.email}})
+
+        // Respond error if no user
+        if (!userData) {
+            let message = 'Incorrect email or password'
+            res.status(400).json(message)
         }
-    })
-        .then(userData => {
-            if (!userData) {
-                res.status(404).json({ message: 'No user found with that ID' });
-                return;
-            }
-            res.json(userData);
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json(err);
-        });
-});
 
-// POST - Create a user
-router.post('/', (req, res) => {
-    User.create({
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password
-    })
-        .then(userData => {
-            req.session.save(() => {
-                req.session.user_id = userData.id;
-                req.session.username = userData.username;
-                req.session.loggedIn = true;
+        // Verify password if user exists
+        const validPassword = await userData.checkPassword(req.body.password)
 
-                res.json(userData);
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json(err);
-        });
-});
-
-// DELETE - delete a user
-router.delete('/:id', (req, res) => {
-    User.destroy({
-        where: {
-            id: req.params.id
+        if(!validPassword) {
+            let message = 'Incorrect email or password'
+            res.status(400).json(message)
         }
-    })
-        .then(userData => {
-            if (!userData) {
-                res.status(404).json({ message: 'No user found with that ID' });
-                return;
-            }
-            res.json(userData);
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json(err);
-        });
-});
 
-module.exports = router;
+        req.session.save(() => {
+            req.session.user_id = userData.id
+            req.session.logged_in = true
+
+            res.json({user: userData, message: 'You are logged in'})
+        })
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
+
+// User logout
+router.post('/logout', (req, res) => {
+
+    if (req.session.logged_in) {
+        req.session.destroy(() => {
+            res.status(204).end()
+        })
+    } else {
+        res.status(404).end()
+    }
+})
+
+
+module.exports = router

@@ -1,0 +1,35 @@
+<div class="container-fluid">
+
+    <div class="row">
+
+        {{!-- Loop through each post --}}
+        {{#each posts as |post| }}
+
+        <div class="col-12 m-3">
+            <div class="card bg-light post-card">
+                <div class="card-header">
+                    {{post.title}}
+                    <button style="button" class="btn btn-secondary float-right delete-button" data-id="{{post.id}}">Delete Post</button>
+                </div>
+                <div class="card-body">
+                    <div class="card-title text-muted">Posted by: {{post.user.name}}</div>
+                    <h4>Post</h4>
+                    <p>{{post.text}}</p>
+
+                    <div class="form-group">
+                            <label for="">Update Post? Change text below.</label>
+                            <br>
+                            <textarea name="" id="updateText" cols="15" rows="2" class="form-control">{{post.text}}</textarea>
+                        </div>
+                        <button type='button' id='updateBtn' post-id={{post.id}} class='btn btn-primary update-btn'>Comment</button>
+
+                </div>
+            </div>
+        </div>
+
+        {{/each}}
+    </div>
+
+</div>
+
+<script src="./js/profile.js"></script>
